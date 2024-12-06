@@ -1,0 +1,210 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crime Predictor</title>
+    <link rel="stylesheet" href="{% static 'predictions/predict.css' %}">
+    <script src="{% static 'predictions/script.js' %}" defer></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            background-color: #d6ebf9;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        header h2 {
+            margin: 5px 0 10px;
+            font-size: 1.2rem;
+        }
+
+        main {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+        }
+
+        #form-section {
+            flex-basis: 30%;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-right: 1px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        #form-section h2 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        form {
+            width: 100%;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #model-description {
+            margin-top: 20px;
+            text-align: justify;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        #right-section {
+            flex-basis: 70%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow-y: auto;
+        }
+
+        #graph-container {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+            width: 100%;
+        }
+
+        #graph-content {
+            flex-grow: 1;
+            width: 100%;
+            height: auto;
+        }
+
+        .graph img {
+            width: 100%;
+            height: auto;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f1f1f1;
+        }
+
+        .tab.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .graph {
+            display: none;
+        }
+
+        .graph.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Budget vs Overcapacity/Expenditure</h1>
+        <h2>The Future of Crime Analysis is Here</h2>
+    </header>
+    <main>
+        <!-- Left Section: Form -->
+        <section id="form-section">
+            <h2>Form</h2>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn">Predict</button>
+            </form>
+
+            {% if result %}
+            <div class="result">
+                <h2>Prediction Result</h2>
+                <p>{{ result }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Model Description moved here -->
+            <div id="model-description">
+                <h2>Model Description</h2>
+                <p>
+                    XGBoost was selected for this analysis because it is a powerful ensemble algorithm that often performs well with tabular data and has been shown to provide high accuracy in regression tasks. Given the complexity of our data, which includes multiple predictive features such as prison overcapacity and expenditure on inmate management, XGBoost's ability to capture non-linear relationships and interactions between features made it a suitable choice.
+                </p>
+                <h2>Insights</h2>
+                <p>
+                    The XGBoost model revealed that states with overcrowded prisons and higher expenditures on inmates tend to allocate larger budgets in subsequent years. This insight supports the hypothesis that prison overcapacity and related expenses influence future budgeting decisions, likely as states attempt to address the challenges posed by overcrowded facilities. This intelligence could be valuable for policymakers, as it suggests that increasing investments in prison management is a reactive measure to overcapacity issues. Furthermore, the model’s performance metrics validated its predictive power, indicating that similar approaches could be applied to other states or regions to inform budget forecasting.
+                </p>
+            </div>
+        </section>
+
+        <!-- Right Section: Graphs Only -->
+        <div id="right-section">
+            <div id="graph-container">
+                <div class="tabs">
+                    <div class="tab active" data-tab="tab1">Graph 1</div>
+                    <div class="tab" data-tab="tab2">Graph 2</div>
+                    <div class="tab" data-tab="tab3">Graph 3</div>
+                    <div class="tab" data-tab="tab4">Graph 4</div>
+                    <div class="tab" data-tab="tab5">Graph 5</div>
+                </div>
+                <div id="graph-content">
+                    <div class="graph active" id="tab1">
+                        <img src="{% static 'visualizations/Boxplot_of_Total_Climate_Impact_by_Crop_Rotation_Adaptation_Strategy.png' %}" alt="Graph 1">
+                    </div>
+                    <div class="graph" id="tab2">
+                        <img src="{% static 'visualizations/Distribution_of_Extreme_Weather_Events.png' %}" alt="Graph 2">
+                    </div>
+                    <div class="graph" id="tab3">
+                        <img src="{% static 'visualizations/Distribution_of_Total_Climate_Impact.png' %}" alt="Graph 3">
+                    </div>
+                    <div class="graph" id="tab4">
+                        <img src="{% static 'visualizations/Correlation_Heatmap.png' %}" alt="Graph 4">
+                    </div>
+                    <div class="graph" id="tab5">
+                        <img src="{% static 'visualizations/Violinplot_of_Total_Climate_Impact_by_Region.png' %}" alt="Graph 5">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

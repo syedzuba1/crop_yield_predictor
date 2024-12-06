@@ -1,0 +1,167 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'predictions/predict.css' %}">
+    <script src="{% static 'predictions/script.js' %}" defer></script>
+    <title>Crime Predictor</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            background-color: #d6ebf9;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        header h2 {
+            margin: 5px 0 10px;
+            font-size: 1.2rem;
+        }
+
+        main {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            height: 100vh;
+        }
+
+        #form-section {
+            flex-basis: 1%; /* Narrow width */
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-right: 1px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow-y: auto; /* Allow scrolling if content overflows */
+        }
+
+        #form-section h2 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        form {
+            width: 100%;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .description {
+            margin-top: 20px;
+            text-align: justify;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        #right-section {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        #graph-container {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+            width: 100%;
+        }
+
+        #graph-content {
+            flex-grow: 1;
+            width: 100%;
+            height: 80vh; /* Adjust height if necessary */
+        }
+
+        .graph.active {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Conviction Status vs Age/Gender</h1>
+        <h2>The Future of Crime Analysis is Here
+        </h2>
+    </header>
+    <main>
+        <!-- Left Section: Form -->
+        <section id="form-section">
+            <h2>Form</h2>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn">Predict</button>
+            </form>
+            {% if result %}
+            <div class="result">
+                <h3>Outcome of Prediction</h3>
+                <p>{{ result }}</p>
+            </div>
+            {% endif %}
+            <!-- Model Description -->
+            <div class="description">
+                <h2>Model Description</h2>
+                <p>
+                    The logistic regression model effectively predicts inmate status based on age group and gender, revealing 
+                    insights into the demographic patterns of convicted and undertrial inmates. After addressing the class imbalance 
+                    through resampling, the model's accuracy improved, especially in identifying undertrial inmates. 
+                </p>
+                <h2>Insights</h2>
+                <p>
+                    The analysis 
+                    highlights the impact of age and gender on inmate status, with younger age groups, particularly males, being more 
+                    likely to be undertrials. This approach underscores the significance of balancing datasets to improve model performance 
+                    and fairness, offering valuable insights for policymakers studying trends in the criminal justice system.
+                </p>
+            </div>
+        </section>
+
+        <!-- Right Section: Graph -->
+        <div id="right-section">
+            <div id="graph-container" class="graph">
+                <!-- Graph Content -->
+                <div id="graph-content">
+                    <div class="graph active" id="tab1">
+                        <img src="{% static 'images/m1.jpeg/' %}" alt="Graph 1" style="width: 100%; height: 100%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
