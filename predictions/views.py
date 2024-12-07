@@ -168,7 +168,7 @@ def predict_view_3(request):
                 # Format the result
                 status = "Convicted" if prediction[0] == 1 else "Undertrial"
                 confidence = max(prediction_proba[0]) * 100
-                result = f"Prediction: {status} (Confidence: {confidence:.2f}%)"
+                result = f": {status}"
     else:
         form = CrimePredictionForm()
         
